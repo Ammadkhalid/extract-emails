@@ -16,7 +16,7 @@ class ExtractEmails:
     Extract emails from a given website
     """
 
-    def __init__(self, url: str, depth: int=None, print_log: bool=False, ssl_verify: bool=True, user_agent: str=None, request_delay: float=0):
+    def __init__(self, url: str, depth: int=None, print_log: bool=False, ssl_verify: bool=True, user_agent: str=None, request_delay: float=0, cookies: dict = None):
         self.delay = request_delay
         self.verify = ssl_verify
         if url.endswith('/'):
@@ -30,9 +30,10 @@ class ExtractEmails:
         self.emails = []
         self.headers = {'User-Agent': user_agent}
         self.extract_emails(url)
+        self.cookies = cookies
 
     def extract_emails(self, url):
-        r = requests.get(url, headers=self.headers, verify=self.verify)
+        r = requests.get(url, headers=self.headers, verify=self.verify, cookies=self.cookies)
         self.scanned.append(url)
         if r.status_code == 200:
             self.get_all_links(r.content)
